@@ -1,0 +1,24 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: kbot
+  namespace: demo
+spec:
+  image: ghcr.io/den-vasyliev/kbot-src
+  interval: 1m
+  secretRef:
+    name: github-auth
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: kbot
+  namespace: demo
+spec:
+  imageRepositoryRef:
+    name: kbot
+  policy:
+    filterTags:
+      pattern: '.*kbot.*'
+    semver:
+      range: 2.2.x
