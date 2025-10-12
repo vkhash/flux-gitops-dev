@@ -6,6 +6,7 @@ on:
       - 'main'
 
 permissions:
+  contents: read
   packages: write # needed for ghcr.io access
 
 env:
