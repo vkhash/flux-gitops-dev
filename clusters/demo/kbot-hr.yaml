@@ -13,3 +13,6 @@ spec:
         kind: GitRepository
         name: kbot
   interval: 1m0s
+  values:
+    image:
+      tag: 2.2.6
