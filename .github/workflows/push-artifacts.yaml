@@ -18,11 +18,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # ✅ Step 1: Validate YAML
-      - name: Validate YAML
+      # ✅ Validate Kubernetes manifests with kubeval
+      - name: Validate manifests with kubeconform
         run: |
-          sudo apt-get update && sudo apt-get install -y yamllint
-          yamllint ./clusters
+          curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz \
+            | tar xz
+          ./kubeconform -strict -ignore-missing-schemas -summary ./clusters/**/*.yaml
       # ✅ Step 2: Get next version using reecetech/version-increment
       - name: Get next version
         id: version
@@ -33,7 +34,7 @@ jobs:
       # ✅ Step 3: Create and push tag
       - name: Create and push tag
         run: |
-          git config user.name "github-actions[bot]"
+          git config user.name "git"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag ${{ steps.version.outputs.version }}
           git push origin ${{ steps.version.outputs.version }}
