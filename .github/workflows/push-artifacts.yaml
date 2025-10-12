@@ -31,6 +31,6 @@ jobs:
       # - name: Push manifests
       #   run: |
       #     flux push artifact $OCI_REPO:$(git rev-parse --short HEAD) \
-            --path="./clusters/demo" \
-            --source="$(git config --get remote.origin.url)" \
-            --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"
+            # --path="./clusters/demo" \
+            # --source="$(git config --get remote.origin.url)" \
+            # --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"
