@@ -50,7 +50,7 @@ jobs:
        # ✅ Step 5: Push Flux OCI
       - name: Push manifests
         run: |
-          flux push artifact $OCI_REPO:$(git branch --show-current)-${{ steps.version.outputs.version }}-$(git rev-parse --short HEAD) \
+          flux push artifact $OCI_REPO:${{ steps.version.outputs.version }}+$(git rev-parse --short HEAD) \
             --path="./clusters/demo" \
             --source="$(git config --get remote.origin.url)" \
             --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"
