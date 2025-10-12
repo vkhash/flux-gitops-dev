@@ -24,21 +24,21 @@ jobs:
           curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz \
             | tar xz
           ./kubeconform -strict -ignore-missing-schemas -summary ./clusters/**/*.yaml
-      # ✅ Step 2: Get next version using reecetech/version-increment
+      # ✅ Get next version using reecetech/version-increment
       - name: Get next version
         id: version
         uses: reecetech/version-increment@2024.10.1
         with:
           scheme: semver
           increment: patch   # or minor/major
-      # ✅ Step 3: Create and push tag
+      # ✅ Create and push tag
       - name: Create and push tag
         run: |
           git config user.name "git"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag ${{ steps.version.outputs.version }}
           git push origin ${{ steps.version.outputs.version }}
-      # ✅ Step 4: Setup Flux CLI
+      # ✅ Setup Flux CLI
       - name: Setup Flux CLI
         uses: fluxcd/flux2/action@main
       - name: Login to GHCR
@@ -47,10 +47,14 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-       # ✅ Step 5: Push Flux OCI
+       # ✅ Push Flux OCI
       - name: Push manifests
         run: |
-          flux push artifact $OCI_REPO:${{ steps.version.outputs.version }}+$(git rev-parse --short HEAD) \
+          flux push artifact $OCI_REPO:${{ steps.version.outputs.version }}-$(git rev-parse --short HEAD) \
             --path="./clusters/demo" \
             --source="$(git config --get remote.origin.url)" \
             --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"
+        # ✅ Tag Flux OCI
+      - name: Deploy manifests to staging
+        run: |
+          flux tag artifact $OCI_REPO:${{ steps.version.outputs.version }}-$(git rev-parse --short HEAD) --tag dev-${{ steps.version.outputs.version }}-$(git rev-parse --short HEAD)  
