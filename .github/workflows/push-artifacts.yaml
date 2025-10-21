@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: write
-  packages: write # needed for ghcr.io access
+  packages: write
 
 env:
   OCI_REPO: "oci://ghcr.io/vkhash/${{ github.event.repository.name }}"
