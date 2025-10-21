@@ -10,7 +10,7 @@ permissions:
   packages: write # needed for ghcr.io access
 
 env:
-  OCI_REPO: "oci://ghcr.io/den-vasyliev/${{ github.event.repository.name }}"
+  OCI_REPO: "oci://ghcr.io/vkhash/${{ github.event.repository.name }}"
 
 jobs:
   kubernetes:
